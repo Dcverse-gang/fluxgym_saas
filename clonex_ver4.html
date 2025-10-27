@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloneX - Train Custom AI Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0a0f;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* ========== LANDING PAGE STYLES ========== */
+        .landing-page {
+            min-height: 100vh;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-25%, -25%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-30%, -30%) scale(1.1); opacity: 0.5; }
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(139, 92, 246, 0.6);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        nav {
+            position: relative;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 4rem;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #8b5cf6;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #8b5cf6;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 80px);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: #a78bfa;
+            margin-bottom: 2rem;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-badge .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: #9ca3af;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .cta-container {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(139, 92, 246, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(139, 92, 246, 0.1);
+            color: #a78bfa;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 5rem;
+            max-width: 1200px;
+            animation: fadeInUp 1s ease-out 0.8s both;
+        }
+
+        /* DARK GRADIENT FOR FEATURE CARDS (changed from white) */
+        .feature-card {
+            background: linear-gradient(145deg, #1a1a2e 0%, #0f0f1a 100%);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.3);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .feature-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: #d1d5db;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* ========== APP INTERFACE STYLES ========== */
+        .app-interface {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+            background: #0a0a0f;
+        }
+
+        .app-header {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .timer-display {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #a78bfa;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #22c55e;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+
+        .btn-back {
+            padding: 0.6rem 1.5rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            color: #a78bfa;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+
+        .app-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 3px;
+        }
+
+        .sidebar-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sidebar h3 {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .sidebar-item {
+            padding: 0.75rem 1rem;
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            color: #d1d5db;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateX(3px);
+        }
+
+        .sidebar-item.active {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.4);
+            color: #a78bfa;
+            font-weight: 600;
+        }
+
+        .info-panel {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .info-panel h4 {
+            color: #a78bfa;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .info-panel p {
+            font-size: 0.85rem;
+            color: #d1d5db;
+            line-height: 1.6;
+        }
+
+        .info-panel ol {
+            margin-left: 1.2rem;
+            color: #d1d5db;
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #0a0a0f;
+        }
+
+        .gradio-container {
+            flex: 1;
+            position: relative;
+            background: #0a0a0f;
+        }
+
+        .gradio-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #0a0a0f;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0a0a0f;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            z-index: 10;
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(139, 92, 246, 0.2);
+            border-top: 4px solid #8b5cf6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #a78bfa;
+        }
+
+        .loading-status {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .loading-substatus {
+            color: #667eea;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 1rem 2rem; }
+            .nav-links { display: none; }
+            h1 { font-size: 3rem; }
+            .subtitle { font-size: 1.1rem; }
+            .cta-container { flex-direction: column; }
+            .features { grid-template-columns: 1fr; }
+            .sidebar { width: 250px; }
+            .app-header { padding: 1rem; }
+            .app-title { font-size: 1.2rem; }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-page" id="landingPage">
+        <div class="bg-animation"></div>
+
+        <nav>
+            <div class="logo">CloneX</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#docs">Documentation</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-badge">
+                <span class="pulse-dot"></span>
+                <span>Professional AI Training Platform</span>
+            </div>
+
+            <h1>Train Custom AI Models<br>In Minutes</h1>
+            
+            <p class="subtitle">
+                Professional LoRA training platform powered by cutting-edge technology. 
+                Create custom AI models without any technical expertise.
+            </p>
+
+            <div class="cta-container">
+                <button class="btn btn-primary" onclick="launchApp()">Launch Session</button>
+                <a href="#demo" class="btn btn-secondary">Watch Demo</a>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <h3>Easy Training</h3>
+                    <p>Upload your images and fine-tune your model with simple settings. No technical knowledge required.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                    </div>
+                    <h3>Instant Deployment</h3>
+                    <p>Once trained, deploy your model instantly. Generate unique images anytime, anywhere.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <h3>Secure & Private</h3>
+                    <p>Your training data is secure. Train on your own private server with full control over your data.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </div>
+                    <h3>Lightning Fast</h3>
+                    <p>Train models in minutes, not hours. Optimized infrastructure for maximum speed and efficiency.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="app-interface" id="appInterface">
+        <header class="app-header">
+            <div class="app-title">CloneX Studio</div>
+            <div class="app-controls">
+                <div class="timer-display" id="timerDisplay">
+                    <span id="timerText">00:00:00</span>
+                </div>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>Connected</span>
+                </div>
+                <button class="btn-back" onclick="returnToHome()">← Back to Home</button>
+            </div>
+        </header>
+
+        <div class="app-container">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3>Quick Start Guide</h3>
+                    <div class="info-panel">
+                        <h4>Getting Started</h4>
+                        <ol>
+                            <li>Configure your LoRA settings</li>
+                            <li>Upload 15-30 training images</li>
+                            <li>Set trigger words</li>
+                            <li>Start training</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>My Projects</h3>
+                    <div class="sidebar-item active">
+                        <span>●</span> Current Training
+                    </div>
+                    <div class="sidebar-item">
+                        <span>◐</span> Recent Models
+                    </div>
+                    <div class="sidebar-item">
+                        <span>★</span> Favorites
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Resources</h3>
+                    <div class="sidebar-item">Documentation</div>
+                    <div class="sidebar-item">Tutorials</div>
+                    <div class="sidebar-item">Community</div>
+                    <div class="sidebar-item">Support</div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="info-panel">
+                        <h4>💡 Pro Tip</h4>
+                        <p>Use diverse images with various angles, lighting, and backgrounds for optimal model performance.</p>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="main-content">
+                <div class="gradio-container">
+                    <div class="loading-overlay" id="loadingOverlay">
+                        <div class="spinner"></div>
+                        <p class="loading-text">Launching CloneX Studio</p>
+                        <p class="loading-status">Initializing FluxGym Interface</p>
+                        <p class="loading-substatus">This may take a few moments</p>
+                    </div>
+                    <iframe 
+                        id="gradioFrame" 
+                        class="gradio-iframe"
+                        src=""
+                        allow="camera; microphone; clipboard-write"
+                        sandbox="allow-same-origin allow-scripts allow-forms allow-downloads"
+                    ></iframe>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Create particles
+        for(let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            document.querySelector('.bg-animation').appendChild(particle);
+        }
+
+        const BACKEND_URL = 'http://98.90.1.115:8000/api';
+        let timerInterval = null;
+        let startTime = null;
+
+        function startTimer() {
+            startTime = Date.now();
+            const timerDisplay = document.getElementById('timerDisplay');
+            timerDisplay.style.display = 'flex';
+            
+            timerInterval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const hours = Math.floor(elapsed / 3600000);
+                const minutes = Math.floor((elapsed % 3600000) / 60000);
+                const seconds = Math.floor((elapsed % 60000) / 1000);
+                
+                document.getElementById('timerText').textContent = 
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            const timerDisplay = document.getElementById('timerDisplay');
+            timerDisplay.style.display = 'none';
+            document.getElementById('timerText').textContent = '00:00:00';
+        }
+
+        function launchApp() {
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('appInterface').style.display = 'flex';
+            loadGradioInterface();
+        }
+
+        async function loadGradioInterface() {
+            const iframe = document.getElementById('gradioFrame');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            try {
+                // Update loading status
+                loadingOverlay.querySelector('.loading-status').textContent = 'Connecting to backend...';
+                
+                // Call backend API to launch session
+                const response = await fetch(`${BACKEND_URL}/launch-session`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({}) // empty for testing
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Backend responded with status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Expecting response like: { "fluxgym_url": "http://..." }
+                if (!data.fluxgym_url) {
+                    throw new Error('No FluxGym URL received from backend');
+                }
+
+                // Update loading status
+                loadingOverlay.querySelector('.loading-status').textContent = 'Loading FluxGym Interface...';
+                
+                // Load FluxGym in iframe
+                iframe.src = data.fluxgym_url;
+                
+                iframe.onload = function() {
+                    setTimeout(() => {
+                        loadingOverlay.classList.add('hidden');
+                        startTimer();
+                    }, 1000);
+                };
+                
+                iframe.onerror = function() {
+                    throw new Error('Failed to load FluxGym interface');
+                };
+                
+            } catch (error) {
+                console.error('Error launching session:', error);
+                loadingOverlay.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">⚠️</div>
+                        <h3 style="color: #a78bfa; margin-bottom: 10px;">Connection Failed</h3>
+                        <p style="color: #9ca3af;">Unable to launch FluxGym session</p>
+                        <p style="color: #6b7280; font-size: 14px; margin-top: 10px;">${error.message}</p>
+                        <button class="btn btn-primary" onclick="location.reload()" style="margin-top: 30px; padding: 12px 30px; font-size: 14px;">
+                            Retry Connection
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function returnToHome() {
+            stopTimer();
+            document.getElementById('landingPage').style.display = 'block';
+            document.getElementById('appInterface').style.display = 'none';
+            document.getElementById('gradioFrame').src = '';
+            
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.classList.remove('hidden');
+            loadingOverlay.innerHTML = `
+                <div class="spinner"></div>
+                <p class="loading-text">Launching CloneX Studio</p>
+                <p class="loading-status">Initializing FluxGym Interface</p>
+                <p class="loading-substatus">This may take a few moments</p>
+            `;
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
