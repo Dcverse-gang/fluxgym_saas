@@ -1,19 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@import "tailwindcss";
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
   background: #0a0a0f;
   color: #fff;
   overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* ========== LANDING PAGE STYLES ========== */
@@ -28,15 +23,20 @@ body {
   width: 100%;
   height: 100%;
   z-index: 0;
+  pointer-events: none;
   // background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
 }
 
 .bg-animation::before {
-  content: '';
+  content: "";
   position: absolute;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+  background: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.1) 0%,
+    transparent 50%
+  );
   animation: pulse 15s ease-in-out infinite;
 }
 
@@ -85,15 +85,15 @@ nav {
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 4rem;
-  background: linear-gradient(
-    135deg,
-    rgba(15, 23, 42, 0.75) 0%,
-    rgba(15, 23, 42, 0.4) 40%,
-    rgba(15, 23, 42, 0.2) 100%
-  );
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
-  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.7);
+  // background: linear-gradient(
+  //   135deg,
+  //   rgba(15, 23, 42, 0.75) 0%,
+  //   rgba(15, 23, 42, 0.4) 40%,
+  //   rgba(15, 23, 42, 0.2) 100%
+  // );
+  // backdrop-filter: blur(18px);
+  // border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+  // box-shadow: 0 8px 30px rgba(15, 23, 42, 0.7);
 }
 
 .logo {
@@ -124,7 +124,7 @@ nav {
 }
 
 .nav-links a::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -5px;
   left: 0;
@@ -257,13 +257,18 @@ h1 {
 }
 
 .btn-primary::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -415,7 +420,7 @@ h1 {
 }
 
 .section-heading::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   bottom: -0.5rem;

@@ -3,6 +3,7 @@ import type React from "react";
 import { useNavigate } from "react-router-dom";
 import LandingNav from "../components/LandingNav";
 import FeatureGrid from "../components/FeatureGrid";
+import Separator from "../components/Separator";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -100,7 +101,7 @@ const HomePage = () => {
       {/* About section: image/text split with mission & vision cards */}
       <section
         id="about"
-        className="border-t border-slate-800/60 py-16 px-6 flex justify-center"
+        className=" py-16 px-6 flex justify-center"
       >
         <div className="max-w-6xl w-full flex flex-col gap-10 lg:flex-row lg:items-center">
           <div className="w-full max-w-xl overflow-hidden rounded-3xl border border-slate-700/60 shadow-2xl shadow-slate-950/80">
@@ -147,7 +148,7 @@ const HomePage = () => {
       {/* Pricing section */}
       <section
         id="pricing"
-        className="section-block border-t border-slate-800/60 py-20 px-6"
+        className="section-block  pb-20 px-6"
       >
         <h2 className="section-heading text-center">Pricing</h2>
         <p className="mt-2 text-sm text-indigo-200/80 max-w-xl mx-auto text-center">
@@ -215,23 +216,26 @@ const HomePage = () => {
         </div>
       </section>
 
+      <Separator />
+
       {/* Demo walkthrough section with full‑width video */}
       <section
         id="demo"
-        className="section-block border-t border-slate-800/60 py-20 px-6 mb-16"
+        className="section-block px-6 mb-16"
       >
         <h2 className="section-heading text-center">Demo Walkthrough</h2>
         <p className="mt-2 text-sm text-indigo-200/80 max-w-xl mx-auto text-center">
           Watch a full training session from dataset upload to ready‑to‑use model inside
           the FluxGym interface.
         </p>
-        <div className="mt-10 flex justify-center">
+        <div className="w-full mt-10 flex justify-center">
           <div className="w-full max-w-6xl aspect-video overflow-hidden rounded-3xl border border-slate-700/60 shadow-2xl shadow-slate-950/90">
             <iframe
               src="https://www.youtube.com/embed/WYhfJEfsz7Q"
               title="FluxGym Demo Walkthrough"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
+              className="h-full w-full object-cover"
             />
           </div>
         </div>

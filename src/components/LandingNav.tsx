@@ -1,13 +1,18 @@
-import React from 'react'
+import React from "react";
+import { Link } from "react-router";
 
 interface LandingNavProps {
-  onAnchorClick: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
+  onAnchorClick: (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => void;
 }
 
 const LandingNav: React.FC<LandingNavProps> = ({ onAnchorClick }) => {
   return (
     <nav>
-      <div className="logo">CloneX</div>
+      <div className="logo cursor-pointer">
+        <Link to="/">CloneX</Link>
+      </div>
       <ul className="nav-links">
         <li>
           <a href="#features" onClick={onAnchorClick}>
@@ -31,7 +36,7 @@ const LandingNav: React.FC<LandingNavProps> = ({ onAnchorClick }) => {
         </li>
       </ul>
     </nav>
-  )
-}
+  );
+};
 
-export default LandingNav
+export default LandingNav;
