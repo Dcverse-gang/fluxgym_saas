@@ -1,14 +1,49 @@
-import type React from "react";
-import LandingNav from "../components/LandingNav";
+import React from "react";
+import { Link } from "react-router";
 
-interface HeaderProps {
-  onAnchorClick: (
+const Header: React.FC = () => {
+  const handleAnchorClick = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => void;
-}
+  ) => {
+    const href = event.currentTarget.getAttribute("href");
+    if (href && href.startsWith("#")) {
+      event.preventDefault();
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
 
-const Header: React.FC<HeaderProps> = ({ onAnchorClick }) => {
-  return <LandingNav onAnchorClick={onAnchorClick} />;
+  return (
+    <nav>
+      <div className="logo cursor-pointer">
+        <Link to="/">CloneX</Link>
+      </div>
+      <ul className="nav-links">
+        <li>
+          <a href="#features" onClick={handleAnchorClick}>
+            Features
+          </a>
+        </li>
+        <li>
+          <a href="#pricing" onClick={handleAnchorClick}>
+            Pricing
+          </a>
+        </li>
+        <li>
+          <a href="#docs" onClick={handleAnchorClick}>
+            Documentation
+          </a>
+        </li>
+        <li>
+          <a href="#about" onClick={handleAnchorClick}>
+            About
+          </a>
+        </li>
+      </ul>
+    </nav>
+  );
 };
 
 export default Header;

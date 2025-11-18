@@ -1,19 +1,23 @@
-import React from 'react'
+import React from "react";
 
 interface AppHeaderProps {
-  timerText: string
-  timerRunning: boolean
-  onBack: () => void
+  timerText: string;
+  timerRunning: boolean;
+  onBack: () => void;
 }
 
-export const AppHeader: React.FC<AppHeaderProps> = ({ timerText, timerRunning, onBack }) => {
+export const AppHeader: React.FC<AppHeaderProps> = ({
+  timerText,
+  timerRunning,
+  onBack,
+}) => {
   return (
     <header className="app-header">
       <div className="app-title">CloneX Studio</div>
       <div className="app-controls">
         <div
           className="timer-display"
-          style={{ display: timerRunning ? 'flex' : 'none' }}
+          style={{ display: timerRunning ? "flex" : "none" }}
           aria-hidden={!timerRunning}
         >
           <span id="timerText">{timerText}</span>
@@ -27,10 +31,24 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ timerText, timerRunning, o
         </button>
       </div>
     </header>
-  )
+  );
+};
+
+interface AppSidebarProps {
+  currentResource?: string | null;
+  onResourceClick?: (resource: string) => void;
 }
 
-export const AppSidebar: React.FC = () => {
+export const AppSidebar: React.FC<AppSidebarProps> = ({
+  onResourceClick = () => {},
+  currentResource = "",
+}: AppSidebarProps) => {
+  const resources = [
+    { name: "Documentation", key: "documentation" },
+    { name: "Tutorials", key: "tutorials" },
+    { name: "Community", key: "community" },
+    { name: "Support", key: "support" },
+  ];
   return (
     <aside className="sidebar">
       <div className="sidebar-section">
@@ -61,21 +79,28 @@ export const AppSidebar: React.FC = () => {
 
       <div className="sidebar-section">
         <h3>Resources</h3>
-        <div className="sidebar-item">Documentation</div>
-        <div className="sidebar-item">Tutorials</div>
-        <div className="sidebar-item">Community</div>
-        <div className="sidebar-item">Support</div>
+        {resources.map((item) => (
+          <div
+            key={item.key}
+            className={`sidebar-item ${
+              currentResource === item.key ? "active" : ""
+            }`}
+            onClick={() => onResourceClick(item.key)}
+          >
+            {item.name}
+          </div>
+        ))}
       </div>
 
       <div className="sidebar-section">
         <div className="info-panel">
           <h4>💡 Pro Tip</h4>
           <p>
-            Use diverse images with various angles, lighting, and backgrounds for optimal model
-            performance.
+            Use diverse images with various angles, lighting, and backgrounds
+            for optimal model performance.
           </p>
         </div>
       </div>
     </aside>
-  )
-}
+  );
+};
