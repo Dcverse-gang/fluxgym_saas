@@ -41,6 +41,11 @@ const Header: React.FC = () => {
             About
           </a>
         </li>
+        <li>
+          <button className="btn-login">
+            <Link to="/login">Login</Link>
+          </button>
+        </li>
       </ul>
     </nav>
   );

@@ -6,19 +6,12 @@ import FeatureGrid from "../components/FeatureGrid";
 import Separator from "../components/Separator";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
+import Particles from "../components/Particles";
 
 const HomePage = () => {
   const navigate = useNavigate();
 
-  const particles = useMemo(
-    () =>
-      Array.from({ length: 30 }, () => ({
-        left: `${Math.random() * 100}%`,
-        duration: `${Math.random() * 10 + 10}s`,
-        delay: `${Math.random() * 5}s`,
-      })),
-    []
-  );
+  
 
   const scrollToDemo = () => {
     const target = document.getElementById("demo");
@@ -31,19 +24,7 @@ const HomePage = () => {
     <div>
       <Header />
       <div className="landing-page" id="landingPage">
-        <div className="bg-animation">
-          {particles.map((particle, index) => (
-            <div
-              key={index}
-              className="particle"
-              style={{
-                left: particle.left,
-                animationDuration: particle.duration,
-                animationDelay: particle.delay,
-              }}
-            />
-          ))}
-        </div>
+      <Particles />
 
         <section className="hero">
           <div className="hero-badge">
@@ -51,7 +32,7 @@ const HomePage = () => {
             <span>Professional AI Training Platform</span>
           </div>
 
-          <h1>
+          <h1 className="hero-title">
             Train Custom AI Models
             <br />
             In Minutes

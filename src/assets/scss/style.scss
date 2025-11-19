@@ -195,13 +195,14 @@ nav {
   }
 }
 
-h1 {
+.hero-title {
   font-size: 5.5rem;
   font-weight: 800;
   line-height: 1.08;
   margin-bottom: 1.8rem;
   background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: fadeInUp 1s ease-out 0.2s both;
 }
